@@ -1,6 +1,8 @@
 -- // ServerScriptDownloader
 -- // by croak14_ and inferiousmalder
 
+local savemodulescripts = true
+
 local freemodels = {}
 for _, v in pairs(game:GetDescendants()) do
     local b = gethiddenproperty(v, "SourceAssetId")
@@ -55,7 +57,7 @@ for i, v in pairs(freemodels) do
                 if descendants then
                     local toprint = {}
                     for _, sc in pairs(descendants) do
-                        if sc:IsA("Script") or sc:IsA("ModuleScript") then
+                        if sc:IsA("Script") or (savemodulescripts and sc:IsA("ModuleScript")) then
                             counter += 1
                             toprint[#toprint + 1] = '~' .. sc.Name .. '~'
                             local name = folderName .. "/" .. sc.Name:gsub("/", ""):gsub("%z", ""):gsub("%p", "")
