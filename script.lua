@@ -57,16 +57,18 @@ for i, v in pairs(freemodels) do
                 if descendants then
                     local toprint = {}
                     for _, sc in pairs(descendants) do
-                        if sc:IsA("Script") or (savemodulescripts and sc:IsA("ModuleScript")) then
+                        if (sc:IsA("Script") and sc.RunContext == Enum.RunContext.Server) or (savemodulescripts and sc:IsA("ModuleScript")) then
                             counter += 1
                             toprint[#toprint + 1] = '~' .. sc.Name .. '~'
                             local name = folderName .. "/" .. sc.Name:gsub("/", ""):gsub("%z", ""):gsub("%p", "")
                             if isfile(name .. ".lua") then name ..= tostring(counter) end
                             writefile(name .. ".lua",  `-- Saved with croak14_'s and inferiousmalder's ServerScriptDownloader\n-- Parent: {sc.Parent.Name}\n-- AssetId: {tostring(vs)}\n\n\n`..sc.Source)
-                        elseif sc:IsA("NumberPose") and sc.Value > 1000000 then
+                        elseif sc:IsA("NumberPose") and sc.Value > 400000 then
                             local fold = folderName.."/".."NumberPoses"
                             if not isfolder(fold) then makefolder(fold) end
-                            writefile(fold.."/"..sc.Name:gsub("/", "")..".txt", "Value: "..tostring(sc.Value))
+                            local name = fold.."/"..sc.Name:gsub("/", "")
+                            if isfile(name .. ".lua") then name ..= tostring(counter) end
+                            writefile(name..".txt", "Value: "..tostring(sc.Value))
                         end
                     end
                     if #toprint > 0 then
@@ -75,7 +77,7 @@ for i, v in pairs(freemodels) do
                 end
             end
         end)
-        task.wait(0.25)
+        task.wait()
     end
 end
 
